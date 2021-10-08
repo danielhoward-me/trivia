@@ -1,11 +1,13 @@
 const $ = (id) => document.getElementById(id);
 const questions = $('questions');
 const scoreEl = $('scoreNumber');
+const streakEl = $('streakNumber');
 const highScoreEl = $('highScoreNumber');
 if (!localStorage.highScore) localStorage.highScore = 0;
 highScoreEl.innerHTML = localStorage.highScore;
 let jokeIds = 0;
 let score = 0;
+let streak = 0;
 const ques = [];
 const letters = [
     'A',
@@ -67,8 +69,10 @@ class JokeCard {
         if (this.clicked) return;
         this.clicked = true;
         score++;
+        streak++;
         if (id !== this.ranQ) {
             score--;
+            streak = 0;
             $(`${this.id}${id}Button`).style.background = 'red';
         };
         if (score > localStorage.highScore) {
@@ -77,6 +81,7 @@ class JokeCard {
         }
         $(`${this.id}${this.ranQ}Button`).style.background = 'green';
         scoreEl.innerHTML = score;
+       streakEl.innerHTML = streak;
         ques.push(new JokeCard());
     }
     reRun() {
