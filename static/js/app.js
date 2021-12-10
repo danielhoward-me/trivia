@@ -24,17 +24,18 @@ class JokeCard {
         this.run();
     }
     start(first) {
-        const add = (text) => first ? questions.innerHTML += text : document.getElementById(`q${this.id}`).innerHTML = text;
+        const add = (text) => first ? questions.innerHTML += text : $(`q${this.id}`).innerHTML = text;
         add(`
             <div id="q${this.id}">
                 <div id="questionCard${this.id}" class="card" style="height: 0%;">
-                    <div id="question${this.id}" style="margin-left: 50%; transform: translateX(-50%);"><img style="width: 50%; margin-top: 20px;" src="/static/img/loading.gif"/></div>
+                    <div id="question${this.id}" style="margin-left: 50%; transform: translateX(-50%);"><img class="loading-img" src="/static/img/loading.gif"/></div>
                     <div class="buttonContainer" id="options${this.id}"></div>
                     <small style="color: lightgrey;" id="sub${this.id}"></small>
                 </div>
             </div>
         `);
-        document.getElementById(`questionCard${this.id}`).style.height = '100%';
+        this.questionCard = $(`questionCard${this.id}`);
+        this.questionCard.style.height = '100%';
         this.question = $(`question${this.id}`);
         this.options = $(`options${this.id}`);
         this.subText = $(`sub${this.id}`);
@@ -42,8 +43,14 @@ class JokeCard {
     async run() {
         const fetchedQuestion = await fetchQuestion()
         .catch((err) => {
-    
+            this.questionCard.style.color = 'red';
+            this.question.innerHTML = `There has been an Error!`;
+            this.options.innerHTML = '<button onclick="newQuestion(this)">Try Again</button>';
+            this.subText.innerHTML = err.stack;
+            this.error = true;
+            this.question.scrollIntoView();
         });
+        if (this.error) return;
     
         let optionsArray = [];
         if (fetchedQuestion.type == 'multiple') {
@@ -74,15 +81,18 @@ class JokeCard {
             score--;
             streak = 0;
             $(`${this.id}${id}Button`).style.background = 'red';
-        };
+        }
         if (score > localStorage.highScore) {
             localStorage.highScore = score;
             highScoreEl.innerHTML = score;
         }
         $(`${this.id}${this.ranQ}Button`).style.background = 'green';
         scoreEl.innerHTML = score;
-       streakEl.innerHTML = streak;
-        ques.push(new JokeCard());
+        streakEl.innerHTML = streak;
+        newQuestion();
+        ['0', '1', '2', '3'].forEach((num) => {
+            // $(`${this.id}${num}Button`)?.setAttribute('disabled', 'true');
+        });
     }
     reRun() {
         this.start();
@@ -90,24 +100,16 @@ class JokeCard {
     }
 }
 
-let url = 'https://opentdb.com/api.php?amount=1&encode=base64';
+let url = 'https://opentdb.com/api.php?amount=1';
 async function fetchQuestion() {
     let json;
     try {
         json = await (await fetch(url)).json();
     } catch(err) {
-        throw new Error('Error on fetch');
+        console.error(err);
+        throw new Error(err);
     };
     if (json.response_code != 0) throw new Error('Error after fetch');
-
-    json.results[0].category = atob(json.results[0].category);
-    json.results[0].type = atob(json.results[0].type);
-    json.results[0].difficulty = atob(json.results[0].difficulty);
-    json.results[0].question = atob(json.results[0].question);
-    json.results[0].correct_answer = atob(json.results[0].correct_answer);
-    json.results[0].incorrect_answers.forEach((answer, index) => {
-        json.results[0].incorrect_answers[index] = atob(answer);
-    });
 
     return json.results[0];
 };
@@ -115,7 +117,13 @@ async function fetchQuestion() {
 function answerButton(text, id, questionID, answerID) {
     return `<button id="${id}" onclick="ques[${questionID}].checkAnswer(${answerID})">${text}</button>`;
 };
-ques.push(new JokeCard());
+
+function newQuestion(element) {
+    if (element) element.setAttribute('disabled', 'true');
+    ques.push(new JokeCard());
+}
+
+newQuestion();
 
 (async () => {
     const categories = $('categories')
