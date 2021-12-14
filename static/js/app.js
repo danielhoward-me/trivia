@@ -80,19 +80,19 @@ class JokeCard {
         if (id !== this.ranQ) {
             score--;
             streak = 0;
-            $(`${this.id}${id}Button`).style.background = 'red';
+            $(`${this.id}${id}Button`).classList.add('wrong');
         }
         if (score > localStorage.highScore) {
             localStorage.highScore = score;
             highScoreEl.innerHTML = score;
         }
-        $(`${this.id}${this.ranQ}Button`).style.background = 'green';
+        $(`${this.id}${this.ranQ}Button`).classList.add('correct');
         scoreEl.innerHTML = score;
         streakEl.innerHTML = streak;
         newQuestion();
-        ['0', '1', '2', '3'].forEach((num) => {
-            // $(`${this.id}${num}Button`)?.setAttribute('disabled', 'true');
-        });
+        // ['0', '1', '2', '3'].forEach((num) => {
+        //     $(`${this.id}${num}Button`)?.setAttribute('disabled', 'true');
+        // });
     }
     reRun() {
         this.start();

@@ -89,7 +89,6 @@ button {
     margin-bottom: 8px;
     padding: 5px;
     cursor: pointer;
-    background: linear-gradient(-20deg, #b721ff 0%, #21d4fd 100%);
     display: block;
     z-index: 1;
 }
@@ -101,7 +100,6 @@ button::after {
     right: 0;
     bottom: 0;
     left: 0;
-    background: linear-gradient(-20deg, #21d4fd 0%, #b721ff 100%);
     z-index: -1;
     transition: opacity 0.2s linear;
     opacity: 0;
@@ -114,6 +112,27 @@ button:active {
 }
 button span {
     z-index: 3;
+}
+
+button {
+    background: linear-gradient(-20deg, #b721ff 0%, #21d4fd 100%);
+}
+button::after {
+    background: linear-gradient(-20deg, #21d4fd 0%, #b721ff 100%);
+}
+
+button.correct {
+    background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+}
+button.correct::after {
+    background: linear-gradient(120deg, #8fd3f4 0%, #84fab0 100%);
+}
+
+button.wrong {
+    background: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+}
+button.wrong::after {
+    background: linear-gradient(to top, #ffb199 0%, #ff0844 100%);
 }
 
 .buttonContainer {
