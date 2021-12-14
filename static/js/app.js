@@ -57,10 +57,10 @@ class JokeCard {
             this.ranQ = Math.round(Math.random() * 3);
             let currentAnswer = 0;
             optionsArray[this.ranQ] = answerButton(`${letters[this.ranQ]} - ${fetchedQuestion.correct_answer}`, `${this.id}${this.ranQ}Button`, this.id, this.ranQ);
-            if (!optionsArray[0]) optionsArray[0] = answerButton(`${letters[0]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}0Button`, this.id, 0);
-            if (!optionsArray[1]) optionsArray[1] = answerButton(`${letters[1]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}1Button`, this.id, 1);
-            if (!optionsArray[2]) optionsArray[2] = answerButton(`${letters[2]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}2Button`, this.id, 2);
-            if (!optionsArray[3]) optionsArray[3] = answerButton(`${letters[3]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}3Button`, this.id, 3);
+            if (!optionsArray[0]) optionsArray[0] = answerButton(`${letters[0]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}0Button`, this.id, 0, true);
+            if (!optionsArray[1]) optionsArray[1] = answerButton(`${letters[1]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}1Button`, this.id, 1, true);
+            if (!optionsArray[2]) optionsArray[2] = answerButton(`${letters[2]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}2Button`, this.id, 2, true);
+            if (!optionsArray[3]) optionsArray[3] = answerButton(`${letters[3]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}3Button`, this.id, 3, true);
         } else {
             this.ranQ = fetchedQuestion.correct_answer == "True" ? 0 : 1;
             optionsArray[0] = answerButton(`True`, `${this.id}0Button`, this.id, 0);
@@ -114,8 +114,8 @@ async function fetchQuestion() {
     return json.results[0];
 };
 
-function answerButton(text, id, questionID, answerID) {
-    return `<button id="${id}" onclick="ques[${questionID}].checkAnswer(${answerID})">${text}</button>`;
+function answerButton(text, id, questionID, answerID, letterOptions) {
+    return `<button id="${id}" onclick="ques[${questionID}].checkAnswer(${answerID})"><span>${text}</span></button>`;
 };
 
 function newQuestion(element) {
@@ -138,7 +138,7 @@ newQuestion();
         difficulties.innerHTML += `<option value="${difficulty.toLocaleLowerCase()}">${difficulty}</option>`;
     });
     form.addEventListener('submit', () => {
-        url = 'https://opentdb.com/api.php?amount=1&encode=base64';
+        url = 'https://opentdb.com/api.php?amount=1';
         const category = categories.selectedIndex;
         const difficulty = difficulties.selectedIndex;
         if (category === 0 && difficulty === 0) {
