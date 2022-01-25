@@ -9,12 +9,6 @@ let jokeIds = 0;
 let score = 0;
 let streak = 0;
 const ques = [];
-const letters = [
-    'A',
-    'B',
-    'C',
-    'D'
-];
 
 class JokeCard {
     constructor() {
@@ -29,8 +23,8 @@ class JokeCard {
             <div id="q${this.id}">
                 <div id="questionCard${this.id}" class="card" style="height: 0%;">
                     <div id="question${this.id}" style="margin-left: 50%; transform: translateX(-50%);"><img class="loading-img" src="/static/img/loading.gif"/></div>
-                    <div class="buttonContainer" id="options${this.id}"></div>
-                    <small style="color: lightgrey;" id="sub${this.id}"></small>
+                    <div class="options" class="buttonContainer" id="options${this.id}"></div>
+                    <small class="subtext" style="color: lightgrey;" id="sub${this.id}"></small>
                 </div>
             </div>
         `);
@@ -56,11 +50,10 @@ class JokeCard {
         if (fetchedQuestion.type == 'multiple') {
             this.ranQ = Math.round(Math.random() * 3);
             let currentAnswer = 0;
-            optionsArray[this.ranQ] = answerButton(`${letters[this.ranQ]} - ${fetchedQuestion.correct_answer}`, `${this.id}${this.ranQ}Button`, this.id, this.ranQ);
-            if (!optionsArray[0]) optionsArray[0] = answerButton(`${letters[0]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}0Button`, this.id, 0, true);
-            if (!optionsArray[1]) optionsArray[1] = answerButton(`${letters[1]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}1Button`, this.id, 1, true);
-            if (!optionsArray[2]) optionsArray[2] = answerButton(`${letters[2]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}2Button`, this.id, 2, true);
-            if (!optionsArray[3]) optionsArray[3] = answerButton(`${letters[3]} - ${fetchedQuestion.incorrect_answers[currentAnswer++]}`, `${this.id}3Button`, this.id, 3, true);
+            optionsArray[this.ranQ] = answerButton(fetchedQuestion.correct_answer, `${this.id}${this.ranQ}Button`, this.id, this.ranQ);
+            for (let i = 0; i <= 3; i++) {
+                if (!optionsArray[i]) optionsArray[i] = answerButton(fetchedQuestion.incorrect_answers[currentAnswer++], `${this.id}${i}Button`, this.id, i, true);
+            }
         } else {
             this.ranQ = fetchedQuestion.correct_answer == "True" ? 0 : 1;
             optionsArray[0] = answerButton(`True`, `${this.id}0Button`, this.id, 0);
@@ -81,6 +74,9 @@ class JokeCard {
             score--;
             streak = 0;
             $(`${this.id}${id}Button`).classList.add('wrong');
+        }
+        if (streak !== 0 && streak % 3 === 0) {
+            lowerConfetti();
         }
         if (score > localStorage.highScore) {
             localStorage.highScore = score;
@@ -114,13 +110,17 @@ async function fetchQuestion() {
     return json.results[0];
 };
 
-function answerButton(text, id, questionID, answerID, letterOptions) {
+function answerButton(text, id, questionID, answerID) {
     return `<button id="${id}" onclick="ques[${questionID}].checkAnswer(${answerID})"><span>${text}</span></button>`;
 };
 
 function newQuestion(element) {
     if (element) element.setAttribute('disabled', 'true');
     ques.push(new JokeCard());
+}
+
+function lowerConfetti() {
+    $('confetti').style.top = '0vh';
 }
 
 newQuestion();
