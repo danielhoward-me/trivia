@@ -37,6 +37,17 @@ class Settings {
 	get triviaUrl() {
 		return `https://opentdb.com/api.php?amount=1&category=${this.category === 'Any' ? '0' : this.category}&difficulty=${this.difficulty === 'any' ? '0' : this.difficulty}`;
 	}
+
+	reset() {
+		this.data = {
+			category: 0,
+			difficulty: 'any',
+			colourScheme: defaultColorScheme,
+		};
+		localStorage.category = this.data.category;
+		localStorage.difficulty = this.data.difficulty;
+		localStorage.colourScheme = this.data.colourScheme;
+	}
 }
 
 const settings = new Settings();

@@ -2,9 +2,11 @@ if (window.location.search) {
 	const search = new URLSearchParams(window.location.search);
 	if (search.has('difficulty')) {
 		settings.difficulty = search.get('difficulty');
-	} else if (search.has('category')) {
+	}
+	if (search.has('category')) {
 		settings.category = search.get('category');
-	} else if (search.has('colourScheme')) {
+	}
+	if (search.has('colourScheme')) {
 		settings.colourScheme = search.get('colourScheme');
 	}
 	window.history.replaceState(null, null, window.location.pathname);
@@ -171,3 +173,24 @@ Object.keys(colorSchemes).forEach((key) => {
     form.style.height = 'auto';
     $('options').style.display = 'block';
 })();
+
+function resetSettings() {
+	settings.reset();
+	ques[ques.length - 1].reRun();
+	confetti.setColourScheme(settings.colourScheme);
+
+	$('categories').selectedIndex = 0;
+    $('difficulties').selectedIndex = 0;
+	$('colourSchemes').selectedIndex = 0;
+}
+function copySettingsUrl() {
+	const url = `${window.location.href}?difficulty=${settings.difficulty}&category=${settings.category}&colourScheme=${settings.colourScheme}`;
+	copy(url);
+}
+function copy(text) {
+	navigator.permissions.query({name: "clipboard-write"}).then((result) => {
+		if (result.state == "granted" || result.state == "prompt") {
+			navigator.clipboard.writeText(text);
+		}
+	});
+};
