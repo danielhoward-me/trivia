@@ -1,3 +1,15 @@
+if (window.location.search) {
+	const search = new URLSearchParams(window.location.search);
+	if (search.has('difficulty')) {
+		settings.difficulty = search.get('difficulty');
+	} else if (search.has('category')) {
+		settings.category = search.get('category');
+	} else if (search.has('colourScheme')) {
+		settings.colourScheme = search.get('colourScheme');
+	}
+	window.history.replaceState(null, null, window.location.pathname);
+}
+
 const $ = (id) => document.getElementById(id);
 const questions = $('questions');
 const scoreEl = $('scoreNumber');
@@ -87,9 +99,6 @@ class JokeCard {
         scoreEl.innerHTML = score;
         streakEl.innerHTML = streak;
         newQuestion();
-        // ['0', '1', '2', '3'].forEach((num) => {
-        //     $(`${this.id}${num}Button`)?.setAttribute('disabled', 'true');
-        // });
     }
     reRun() {
         this.start();
@@ -97,16 +106,25 @@ class JokeCard {
     }
 }
 
-let url = 'https://opentdb.com/api.php?amount=1';
+let errorThrown = false;
 async function fetchQuestion() {
     let json;
     try {
-        json = await (await fetch(url)).json();
+        json = await (await fetch(settings.triviaUrl)).json();
     } catch(err) {
         console.error(err);
         throw new Error(err);
     };
-    if (json.response_code != 0) throw new Error('Error after fetch');
+    if (json.response_code != 0) {
+		if (errorThrown) {
+			errorThrown = false
+			throw new Error('Error after fetch');
+		}
+		errorThrown = true;
+		settings.difficulty = 'any';
+		settings.category = 0;
+		return fetchQuestion();
+	}
 
     return json.results[0];
 };
@@ -122,6 +140,11 @@ function newQuestion(element) {
 
 newQuestion();
 
+const colourSchemesElement = $('colourSchemes');
+Object.keys(colorSchemes).forEach((key) => {
+	colourSchemesElement.innerHTML += `<option ${key === settings.colourScheme ? 'selected' : ''} value="${key}">${key}</option>`;
+});
+
 (async () => {
     const categories = $('categories')
     const difficulties = $('difficulties');
@@ -129,35 +152,20 @@ newQuestion();
     const json = await (await fetch('https://opentdb.com/api_category.php')).json();
     categories.innerHTML += `<option>Any</option>`;
     json.trivia_categories.forEach((category) => {
-        categories.innerHTML += `<option value="${category.name}">${category.name}</option>`;
+        categories.innerHTML += `<option ${category.id == settings.category ? 'selected' : ''} value="${category.id}">${category.name}</option>`;
     });
     (['Any', 'Easy', 'Medium', 'Hard']).forEach((difficulty) => {
-        difficulties.innerHTML += `<option value="${difficulty.toLocaleLowerCase()}">${difficulty}</option>`;
+        difficulties.innerHTML += `<option ${difficulty.toLocaleLowerCase() === settings.difficulty ? 'selected' : ''} value="${difficulty.toLocaleLowerCase()}">${difficulty}</option>`;
     });
     form.addEventListener('submit', () => {
-        url = 'https://opentdb.com/api.php?amount=1';
-        const category = categories.selectedIndex;
-        const difficulty = difficulties.selectedIndex;
-        if (category === 0 && difficulty === 0) {
-            url += '';
-        } else if (category === 0 && difficulty !== 0) {
-            url += `&difficulty=${difficulties.options[difficulty].value}`;
-        } else if (category !== 0 && difficulty === 0) {
-            json.trivia_categories.forEach((categoryLoop) => {
-                if (categories.options[category].value === categoryLoop.name) {
-                    url += `&category=${categoryLoop.id}`;
-                };
-            });
-        } else if (category !== 0 && difficulty !== 0) {
-            url += `&difficulty=${difficulties.options[difficulty].value}`;
-            json.trivia_categories.forEach((categoryLoop) => {
-                if (categories.options[category].value === categoryLoop.name) {
-                    url += `&category=${categoryLoop.id}`;
-                };
-            });
-        };
+		settings.difficulty = difficulties.options[difficulties.selectedIndex].value;
+		settings.category = categories.options[categories.selectedIndex].value;
+
         ques[ques.length - 1].reRun();
     });
+	colourSchemesElement.addEventListener('change', () => {
+		confetti.setColourScheme(colourSchemesElement.options[colourSchemesElement.selectedIndex].value);
+	});
     $('catLoadImg').style.display = 'none';
     form.style.width = 'auto';
     form.style.height = 'auto';

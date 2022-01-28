@@ -1,12 +1,17 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
 
+:root {
+	--background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+}
+
 html {
     scroll-behavior: smooth;
     overflow: overlay;
+    background-image: var(--background);
+	background-attachment: fixed;
 }
 body {
     margin: 0;
-    background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
     font-family: 'Quicksand', sans-serif;
     text-align: center;
     scroll-behavior: smooth;
@@ -47,6 +52,7 @@ p {
     margin: 0px;
     top: 10px;
     left: 10px;
+	z-index: 2;
 }
 .stats {
     background: rgb(245, 245, 245);
@@ -59,6 +65,7 @@ p {
     margin: 0px;
     top: 10px;
     right: 10px;
+	z-index: 2;
 }
 .options, .subtext {
     z-index: 10;
@@ -182,6 +189,6 @@ body:hover::-webkit-scrollbar-thumb {
     height: 100vh;
     background-repeat: repeat;
     pointer-events: none;
-    z-index: -1;
+    z-index: 1;
     user-select: none;
 }
