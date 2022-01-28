@@ -3,6 +3,7 @@ const questions = $('questions');
 const scoreEl = $('scoreNumber');
 const streakEl = $('streakNumber');
 const highScoreEl = $('highScoreNumber');
+const confetti = new Confetti('confetti');
 if (!localStorage.highScore) localStorage.highScore = 0;
 highScoreEl.innerHTML = localStorage.highScore;
 let jokeIds = 0;
@@ -76,7 +77,7 @@ class JokeCard {
             $(`${this.id}${id}Button`).classList.add('wrong');
         }
         if (streak !== 0 && streak % 3 === 0) {
-            lowerConfetti();
+            
         }
         if (score > localStorage.highScore) {
             localStorage.highScore = score;
@@ -117,10 +118,6 @@ function answerButton(text, id, questionID, answerID) {
 function newQuestion(element) {
     if (element) element.setAttribute('disabled', 'true');
     ques.push(new JokeCard());
-}
-
-function lowerConfetti() {
-    $('confetti').style.top = '0vh';
 }
 
 newQuestion();
