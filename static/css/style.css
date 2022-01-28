@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
 
 html {
     scroll-behavior: smooth;
@@ -7,7 +7,7 @@ html {
 body {
     margin: 0;
     background-image: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
-    font-family: 'Open Sans', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     text-align: center;
     scroll-behavior: smooth;
 }
@@ -60,6 +60,9 @@ p {
     top: 10px;
     right: 10px;
 }
+.options, .subtext {
+    z-index: 10;
+}
 @media only screen and (max-width: 1500px) {
     .categories {
         position: sticky;
@@ -72,6 +75,7 @@ p {
         position: static;
         margin: 10px;
         display: block;
+        z-index: 10;
     }
 }
 
@@ -168,4 +172,16 @@ body:hover::-webkit-scrollbar-thumb {
 }
 ::-webkit-scrollbar-thumb:active {
     background: rgba(20, 20, 20, 0.5);
+}
+
+.confetti {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-repeat: repeat;
+    pointer-events: none;
+    z-index: -1;
+    user-select: none;
 }
