@@ -91,7 +91,7 @@ class JokeCard {
             $(`${this.id}${id}Button`).classList.add('wrong');
         }
         if (streak !== 0 && streak % 3 === 0) {
-            
+            confetti.fall(3000);
         }
         if (score > localStorage.highScore) {
             localStorage.highScore = score;

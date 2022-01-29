@@ -1,6 +1,9 @@
 class Confetti {
-	constructor(id) {
+	constructor(id, count = 100) {
 		this.element = document.getElementById(id);
+		this.count = count;
+		this.finish = false;
+		this.amountFinished = 0;
 		this.setColourScheme(settings.colourScheme);
 	}
 
@@ -9,7 +12,7 @@ class Confetti {
 			<svg width="${window.screen.width}" height="${window.screen.height}" id="confettiSvg"></svg>
 		`;
 		this.svg = document.getElementById('confettiSvg');
-		this.svgText = `
+		this.svg.innerHTML = `
 			<style type="text/css">
 				@keyframes confetti-fall {
 					0% { 
@@ -20,20 +23,32 @@ class Confetti {
 					}
 				}
 				.confetti-element {
-					animation: confetti-fall 4s linear infinite;
+					animation: confetti-fall 4s linear infinite paused;
 				}
 			</style>
-			${this.generateConfetti(100)}
+			${this.generateConfetti(this.count)}
 		`;
-		this.fall();
+		this.confetti = this.getConfetti(this.count);
+		
+		for (const confetti of this.confetti) {
+			confetti.addEventListener('animationiteration', () => {
+				if (this.finish) {
+					this.amountFinished++;
+					confetti.style.animationPlayState = 'paused';
+					if (this.amountFinished === this.count) {
+						this.end();
+					}
+				}
+			});
+		}
 	}
 
 	generateConfetti(count) {
 		const confetti = [];
 		for (let i = 0; i < count; i++) {
 			confetti.push(`
-				<g transform="translate(${this.getRandomNumber(window.screen.width)} 0)">
-					<g class="confetti-element" style="animation-delay: ${this.getRandomNumber(0, -5)}s; animation-duration: ${this.getRandomNumber(6, 4)}s;">
+				<g transform="translate(${this.getRandomNumber(window.screen.width)} -20)">
+					<g id="confetti${i}" class="confetti-element" style="animation-duration: ${this.getRandomNumber(6, 4)}s;">
 						<rect x="0" y="0" height="10" width="10" style="transform: scale(${this.getRandomNumber(1.5, 0.5)});" fill="${this.getRandomColour()}"></rect>
 					</g>
 				</g>
@@ -41,6 +56,14 @@ class Confetti {
 		}
 		return confetti.join('');
 	}
+
+	getConfetti(count) {
+		const confetti = [];
+		for (let i = 0; i < count; i++) {
+			confetti.push(document.getElementById(`confetti${i}`));
+		}
+		return confetti;
+	} 
 
 	getRandomNumber(max, min = 0, round) {
 		let number = Math.random() * (max - min);
@@ -58,7 +81,21 @@ class Confetti {
 		document.documentElement.style.setProperty('--background', colorSchemes[colourScheme].background);
 	}
 
-	fall() {
-		this.svg.innerHTML = this.svgText;
+	async fall(time = 5000) {
+		for (const confetti of this.confetti) {
+			confetti.style.animationPlayState = 'running';
+			await wait(this.getRandomNumber(100, 5, true));
+		}
+		await wait(time);
+		this.finish = true;
 	}
+
+	end() {
+		this.finish = false;
+		this.amountFinished = 0;
+	}
+}
+
+function wait(time) {
+	return new Promise(resolve => setTimeout(resolve, time));
 }
