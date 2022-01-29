@@ -192,3 +192,60 @@ body:hover::-webkit-scrollbar-thumb {
     z-index: 1;
     user-select: none;
 }
+
+.form-button {
+	position: relative;
+	width: min-content;
+	text-align: center;
+	left: 50%;
+	transform: translateX(-50%);
+	margin-top: 5px;
+}
+.form-button * {
+	transition: all 0.2s linear;
+}
+.form-button .save {
+	background: linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);
+	border: none;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	margin: 0;
+	margin-right: 100px;
+	width: 50px;
+}
+.form-button .reset {
+	background: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
+	border: none;
+	border-radius: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 50px;
+	margin: 0;
+	margin-right: 50px;
+}
+.form-button .copy {
+	background: linear-gradient(180deg, #2af598 0%, #009efd 100%);
+	border: none;
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+	position: absolute;
+	right: 0;
+	top: 0;
+	width: 50px;
+	margin: 0;
+}
+.form-button .save:after {
+	background: linear-gradient(120deg, #8ec5fc 0%, #e0c3fc 100%);
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+}
+.form-button .reset:after {
+	background: linear-gradient(to top, #ffb199 0%, #ff0844 100%);
+	border-radius: 0;
+}
+.form-button .copy:after {
+	background: linear-gradient(180deg, #009efd 0%, #2af598 100%);
+	border-top-left-radius: 0;
+	border-bottom-left-radius: 0;
+}
