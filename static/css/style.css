@@ -42,18 +42,21 @@ p {
     display: block;
     position: relative;
 }
-.categories {
+.settings-box {
     background: whitesmoke;
     border-radius: 5px;
     padding: 15px;
     transition: height 0.5s ease-in;
-    max-width: 500px;
+    min-width: 250px;
     display: block;
     position: fixed;
     margin: 0px;
     top: 10px;
     left: 10px;
 	z-index: 2;
+}
+.settings-box::-webkit-scrollbar {
+    display: none;
 }
 .stats {
     background: whitesmoke;
@@ -69,7 +72,14 @@ p {
 	z-index: 2;
 }
 
-.dark-mode .card, .dark-mode .categories, .dark-mode .stats {
+.optionsLoading {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.dark-mode .card, .dark-mode .settings-box, .dark-mode .stats {
 	background: #010101;
 	color: white;
 }
@@ -83,23 +93,77 @@ p {
 .subtext {
 	color: lightgrey;
 }
+
+.mobile-options-view {
+	text-align: left;
+	position: relative;
+	cursor: pointer;
+	user-select: none;
+	display: none;
+}
+.mobile-options-arrow {
+	display: inline-block;
+	margin-left: 100%;
+	position: absolute;
+	top: 0;
+	left: -15px;
+	transform: rotate(180deg);
+	transition: all 0.5s linear;
+}
+.mobile-options-view.open .mobile-options-arrow {
+	transform: rotate(0deg);
+}
+
+.event-listener {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	display: none;
+	z-index: -1;
+}
+
 @media only screen and (max-width: 1500px) {
-    .categories {
+    .settings-box {
         position: sticky;
         margin: 10px;
         display: block;
         z-index: 10;
         border: solid rgb(100, 100, 100) 1px;
     }
+	.dark-mode .settings-box {
+        border: solid rgb(155, 155, 155) 1px;
+	}
     .stats {
         position: static;
         margin: 10px;
         display: block;
         z-index: 10;
     }
+	.mobile-options-view {
+		display: block;
+		margin-bottom: -5px;
+	}
+	.options-view {
+		max-height: 0;
+		transition: max-height 0.4s ease-out;
+		overflow: hidden;
+	}
+	.optionsLoading {
+		display: none;
+	}
+	.mobile-options-view.open + .options > .options-view {
+		max-height: 100vh;
+		overflow: auto;
+		transition: max-height 0.4s ease-in;
+	}
+	.event-listener.active {
+		display: block;
+	}
 }
 
-#options {
+.options {
     text-align: center;
     margin: 5px;
 }

@@ -175,10 +175,14 @@ darkModeElement.addEventListener('change', () => {
 	colourSchemesElement.addEventListener('change', () => {
 		confetti.setColourScheme(colourSchemesElement.options[colourSchemesElement.selectedIndex].value);
 	});
-    $('catLoadImg').style.display = 'none';
+    $('optionsLoadImg').style.display = 'none';
     form.style.width = 'auto';
     form.style.height = 'auto';
     $('options').style.display = 'block';
+
+	customSelect('#categories');
+	customSelect('#difficulties');
+	customSelect('#colourSchemes');
 })();
 
 function resetSettings() {
@@ -201,3 +205,16 @@ function copy(text) {
 		}
 	});
 };
+
+const mobileOptionsView = $('mobileOptionsView');
+const eventListener = $('eventListener');
+mobileOptionsView.addEventListener('click', () => {
+	mobileOptionsView.classList.toggle('open');
+	eventListener.classList.toggle('active');
+});
+eventListener.addEventListener('click', () => {
+	if (mobileOptionsView.classList.contains('open')) {
+		mobileOptionsView.classList.toggle('open');
+		eventListener.classList.toggle('active');
+	}
+});
