@@ -4,10 +4,12 @@ class Settings {
 			category: localStorage.category || 0,
 			difficulty: localStorage.difficulty || 'any',
 			colourScheme: localStorage.colourScheme || defaultColorScheme,
+			darkMode: localStorage.darkMode || 0,
 		};
 		localStorage.category = this.data.category;
 		localStorage.difficulty = this.data.difficulty;
 		localStorage.colourScheme = this.data.colourScheme;
+		localStorage.darkMode = this.data.darkMode;
 	}
 
 	set category(category) {
@@ -23,6 +25,11 @@ class Settings {
 		this.data.colourScheme = colourScheme;
 		localStorage.colourScheme = colourScheme;
 	}
+	set darkMode(darkModeSetting) {
+		document.documentElement.classList.toggle('dark-mode');
+		this.data.darkMode = darkModeSetting;
+		localStorage.darkMode = darkModeSetting;
+	}
 
 	get category() {
 		return this.data.category;
@@ -32,6 +39,9 @@ class Settings {
 	}
 	get colourScheme() {
 		return this.data.colourScheme;
+	}
+	get darkMode() {
+		return this.data.darkMode;
 	}
 
 	get triviaUrl() {

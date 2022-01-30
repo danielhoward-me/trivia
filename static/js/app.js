@@ -39,7 +39,7 @@ class JokeCard {
                 <div id="questionCard${this.id}" class="card" style="height: 0%;">
                     <div id="question${this.id}" style="margin-left: 50%; transform: translateX(-50%);"><img class="loading-img" src="/static/img/loading.gif"/></div>
                     <div class="options" class="buttonContainer" id="options${this.id}"></div>
-                    <small class="subtext" style="color: lightgrey;" id="sub${this.id}"></small>
+                    <small class="subtext" id="sub${this.id}"></small>
                 </div>
             </div>
         `);
@@ -145,6 +145,13 @@ newQuestion();
 const colourSchemesElement = $('colourSchemes');
 Object.keys(colorSchemes).forEach((key) => {
 	colourSchemesElement.innerHTML += `<option ${key === settings.colourScheme ? 'selected' : ''} value="${key}">${key}</option>`;
+});
+
+const darkModeElement = $('darkMode');
+darkModeElement.checked = settings.darkMode == 1 ? true : false;
+if (settings.darkMode == 1) document.documentElement.classList.toggle('dark-mode');
+darkModeElement.addEventListener('change', () => {
+	settings.darkMode = darkModeElement.checked ? 1 : 0;
 });
 
 (async () => {

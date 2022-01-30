@@ -2,6 +2,7 @@
 
 :root {
 	--background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+	--card: whitesmoke;
 }
 
 html {
@@ -55,7 +56,7 @@ p {
 	z-index: 2;
 }
 .stats {
-    background: rgb(245, 245, 245);
+    background: whitesmoke;
     border-radius: 5px;
     padding: 15px;
     transition: height 0.5s ease-in;
@@ -67,8 +68,20 @@ p {
     right: 10px;
 	z-index: 2;
 }
+
+.dark-mode .card, .dark-mode .categories, .dark-mode .stats {
+	background: #010101;
+	color: white;
+}
+.dark-mode .subtext {
+	color: #8c8c8c;
+}
+
 .options, .subtext {
     z-index: 10;
+}
+.subtext {
+	color: lightgrey;
 }
 @media only screen and (max-width: 1500px) {
     .categories {
