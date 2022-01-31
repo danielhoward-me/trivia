@@ -3,8 +3,7 @@ const difficultiesMap = ['any', 'easy', 'medium' ,'hard'];
 const search = new URLSearchParams(window.location.search);
 settings.difficulty = search.get('d') || settings.difficulty;
 settings.category = search.get('c') || settings.category;
-
-window.history.replaceState(null, null, `${window.location.pathname}?c=${settings.category}&d=${settings.difficulty}`);
+settings.updateUrl();
 
 const $ = (id) => document.getElementById(id);
 const questions = $('questions');
@@ -146,17 +145,26 @@ darkModeElement.addEventListener('change', () => {
 	settings.darkMode = darkModeElement.checked ? 1 : 0;
 });
 
+const resetButton = $('resetButton');
+resetButton.addEventListener('click', () => {
+	settings.reset();
+	resetButton.classList.add('active');
+});
+resetButton.addEventListener('animationend', () => {
+	resetButton.classList.remove('active');
+});
+
 (async () => {
     const categories = $('categories')
     const difficulties = $('difficulties');
     const form = $('settingsForm');
     const json = await (await fetch('https://opentdb.com/api_category.php')).json();
-    categories.innerHTML += `<option>Any</option>`;
+    categories.innerHTML += `<option value="0">Any</option>`;
     json.trivia_categories.forEach((category) => {
         categories.innerHTML += `<option ${category.id == settings.category ? 'selected' : ''} value="${category.id}">${category.name}</option>`;
     });
-    (['Any', 'Easy', 'Medium', 'Hard']).forEach((difficulty) => {
-        difficulties.innerHTML += `<option ${difficulty.toLocaleLowerCase() === settings.difficulty ? 'selected' : ''} value="${difficulty.toLocaleLowerCase()}">${difficulty}</option>`;
+    (['Any', 'Easy', 'Medium', 'Hard']).forEach((difficulty, index) => {
+        difficulties.innerHTML += `<option ${index == settings.difficulty ? 'selected' : ''} value="${index}">${difficulty}</option>`;
     });
     categories.addEventListener('change', () => {
 		settings.category = categories.options[categories.selectedIndex].value;

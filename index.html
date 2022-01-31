@@ -34,11 +34,16 @@
 						<div style="margin-top: 5px">
 							<select id="colourSchemes"></select><br/>
 						</div>
-						<label for="darkMode">Dark Mode:</label>
-						<input type="checkbox" id="darkMode"/><br/>
-						<div class="form-button">
-							<button class="reset" type="button" onclick="resetSettings()">Reset</button>
-							<button class="copy" type="button" onclick="copySettingsUrl()">Copy</button>
+						<div class="display-options">
+							<abbr class="dark-mode-switch" title="Dark Mode">
+								<label class="switch">
+									<input type="checkbox" id="darkMode"/>
+									<span class="slider round">
+								</label>
+							</abbr>
+							<abbr class="reset-mode-button" title="Reset Settings">
+								<input class="reset" type="button" id="resetButton"></button>
+							</abbr>
 						</div>
 					</div>
                 </div>

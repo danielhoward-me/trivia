@@ -270,44 +270,86 @@ body:hover::-webkit-scrollbar-thumb {
     user-select: none;
 }
 
-.form-button {
+.display-options {
 	position: relative;
-	width: min-content;
-	text-align: center;
-	left: 50%;
-	transform: translateX(-50%);
-	margin-top: 5px;
+	height: 34px;
 }
-.form-button * {
-	transition: all 0.2s linear;
-}
-.form-button .reset {
-	background: linear-gradient(to top, #ff0844 0%, #ffb199 100%);
-	border: none;
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
-	margin: 0;
-	margin-right: 50px;
-	width: 50px;
-}
-.form-button .copy {
-	background: linear-gradient(180deg, #2af598 0%, #009efd 100%);
-	border: none;
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+
+.dark-mode-switch {
 	position: absolute;
-	right: 0;
 	top: 0;
-	width: 50px;
-	margin: 0;
+	right: calc(50% - 65px);
 }
-.form-button .reset:after {
-	background: linear-gradient(to top, #ffb199 0%, #ff0844 100%);
-	border-top-right-radius: 0;
-	border-bottom-right-radius: 0;
+.reset-mode-button {
+	position: absolute;
+	top: 0;
+	left: calc(50% - 39px);
 }
-.form-button .copy:after {
-	background: linear-gradient(180deg, #009efd 0%, #2af598 100%);
-	border-top-left-radius: 0;
-	border-bottom-left-radius: 0;
+
+.reset {
+	background: url('/static/img/reset.svg') no-repeat;
+	background-size: 34px 34px;
+	border: none;
+	height: 34px;
+	width: 34px;
+	transition: all .4s linear;
+	transition-property: filter;
+	cursor: pointer;
+}
+.dark-mode .reset {
+	filter: invert(100%);
+}
+.reset.active {
+	animation: rotate 1s ease-out;
+}
+
+@keyframes rotate {
+	from {
+		transform: rotate(0deg);
+	}
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+}
+.switch input { 
+	opacity: 0;
+	width: 0;
+	height: 0;
+}
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: black;
+	transition: .4s;
+	border-radius: 34px;
+}
+.slider:before {
+	position: absolute;
+	content: "";
+	height: 26px;
+	width: 26px;
+	left: 4px;
+	bottom: 4px;
+	background-color: white;
+	-webkit-transition: .4s;
+	transition: .4s;
+	border-radius: 50%;
+}
+.switch input:checked + .slider {
+	background-color: white;
+}
+.switch input:checked + .slider:before {
+	transform: translateX(26px);
+	background-color: black;
 }

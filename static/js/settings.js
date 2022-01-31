@@ -15,11 +15,13 @@ class Settings {
 	set category(category) {
 		this.data.category = category;
 		localStorage.category = category;
+		this.updateUrl();
 	}
 	set difficulty(difficulty) {
         if (difficulty < 0 || difficulty > 4) difficulty = 0;
 		this.data.difficulty = difficulty;
 		localStorage.difficulty = difficulty;
+		this.updateUrl();
 	}
 	set colourScheme(colourScheme) {
 		if (!(colourScheme in colorSchemes)) colourScheme = defaultColorScheme;
@@ -46,18 +48,16 @@ class Settings {
 	}
 
 	get triviaUrl() {
-		return `https://opentdb.com/api.php?amount=1&category=${this.category === 'Any' ? '0' : this.category}&difficulty=${this.difficulty == 0 ? '0' : difficultiesMap[this.difficulty]}`;
+		return `https://opentdb.com/api.php?amount=1&category=${this.category == 0 ? '0' : this.category}&difficulty=${this.difficulty == 0 ? '0' : difficultiesMap[this.difficulty]}`;
+	}
+
+	updateUrl() {
+		window.history.replaceState(null, null, `${window.location.pathname}?c=${this.category}&d=${this.difficulty}`);
 	}
 
 	reset() {
-		this.data = {
-			category: 0,
-			difficulty: 'any',
-			colourScheme: defaultColorScheme,
-		};
-		localStorage.category = this.data.category;
-		localStorage.difficulty = this.data.difficulty;
-		localStorage.colourScheme = this.data.colourScheme;
+		this.category = 0;
+		this.difficulty = 0;
 	}
 }
 
