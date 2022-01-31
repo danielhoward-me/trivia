@@ -4,6 +4,7 @@ class Confetti {
 		this.count = count;
 		this.finish = false;
 		this.amountFinished = 0;
+		this.render();
 		this.setColourScheme(settings.colourScheme);
 	}
 
@@ -49,7 +50,7 @@ class Confetti {
 			confetti.push(`
 				<g transform="translate(${this.getRandomNumber(window.screen.width)} -20)">
 					<g id="confetti${i}" class="confetti-element" style="animation-duration: ${this.getRandomNumber(6, 4)}s;">
-						<rect x="0" y="0" height="10" width="10" style="transform: scale(${this.getRandomNumber(1.5, 0.5)});" fill="${this.getRandomColour()}"></rect>
+						<rect x="0" y="0" height="10" width="10" style="transform: scale(${this.getRandomNumber(1.5, 0.5)});"></rect>
 					</g>
 				</g>
 			`);
@@ -77,7 +78,9 @@ class Confetti {
 
 	setColourScheme(colourScheme) {
 		settings.colourScheme = colourScheme;
-		this.render();
+		this.confetti.forEach((confetti) => {
+			confetti.children[0].style.fill = this.getRandomColour();
+		});
 		document.documentElement.style.setProperty('--background', colorSchemes[colourScheme].background);
 	}
 
