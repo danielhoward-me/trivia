@@ -1,11 +1,20 @@
+const $ = (id) => document.getElementById(id);
+
 const difficultiesMap = ['any', 'easy', 'medium' ,'hard'];
 
-const search = new URLSearchParams(window.location.search);
-settings.difficulty = search.get('d') || settings.difficulty;
-settings.category = search.get('c') || settings.category;
-settings.updateUrl();
+function runHashUpdate() {
+	const hash = new URLSearchParams(window.location.hash.replace('#', ''));
+	settings.difficulty = hash.get('d') === null ? settings.difficulty : hash.get('d');
+	settings.category = hash.get('c') === null ? settings.category : hash.get('c');
+	settings.updateUrl();
+}
 
-const $ = (id) => document.getElementById(id);
+runHashUpdate();
+window.addEventListener('hashchange', () => {
+	runHashUpdate();
+	refreshQuestion();
+});
+
 const questions = $('questions');
 const scoreEl = $('scoreNumber');
 const streakEl = $('streakNumber');
@@ -131,6 +140,10 @@ function newQuestion(element) {
     ques.push(new JokeCard());
 }
 
+function refreshQuestion() {
+	ques[ques.length - 1].reRun();
+}
+
 newQuestion();
 
 const colourSchemesElement = $('colourSchemes');
@@ -149,6 +162,7 @@ const resetButton = $('resetButton');
 resetButton.addEventListener('click', () => {
 	settings.reset();
 	resetButton.classList.add('active');
+	refreshQuestion();
 });
 resetButton.addEventListener('animationend', () => {
 	resetButton.classList.remove('active');
@@ -168,11 +182,11 @@ resetButton.addEventListener('animationend', () => {
     });
     categories.addEventListener('change', () => {
 		settings.category = categories.options[categories.selectedIndex].value;
-        ques[ques.length - 1].reRun();
+        refreshQuestion()
     });
     difficulties.addEventListener('change', () => {
 		settings.difficulty = difficulties.options[difficulties.selectedIndex].value;
-        ques[ques.length - 1].reRun();
+		refreshQuestion()
     });
 	colourSchemesElement.addEventListener('change', () => {
 		confetti.setColourScheme(colourSchemesElement.options[colourSchemesElement.selectedIndex].value);
@@ -182,8 +196,9 @@ resetButton.addEventListener('animationend', () => {
     form.style.height = 'auto';
     $('options').style.display = 'block';
 
-	customSelect('#categories');
-	customSelect('#difficulties');
+	settings.selects = {};
+	settings.selects.categories = customSelect('#categories')[0];
+	settings.selects.difficulties = customSelect('#difficulties')[0];
 	customSelect('#colourSchemes');
 })();
 

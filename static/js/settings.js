@@ -15,12 +15,14 @@ class Settings {
 	set category(category) {
 		this.data.category = category;
 		localStorage.category = category;
+		if (this.selects) this.selects.categories.value = category;
 		this.updateUrl();
 	}
 	set difficulty(difficulty) {
-        if (difficulty < 0 || difficulty > 4) difficulty = 0;
+        if (difficulty < 0 || difficulty > 3) difficulty = 0;
 		this.data.difficulty = difficulty;
 		localStorage.difficulty = difficulty;
+		if (this.selects) this.selects.difficulties.value = difficulty;
 		this.updateUrl();
 	}
 	set colourScheme(colourScheme) {
@@ -52,7 +54,7 @@ class Settings {
 	}
 
 	updateUrl() {
-		window.history.replaceState(null, null, `${window.location.pathname}?c=${this.category}&d=${this.difficulty}`);
+		window.history.replaceState(null, null, `${window.location.pathname}#c=${this.category}&d=${this.difficulty}`);
 	}
 
 	reset() {
