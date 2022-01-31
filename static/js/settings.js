@@ -2,7 +2,7 @@ class Settings {
 	constructor() {
 		this.data = {
 			category: localStorage.category || 0,
-			difficulty: localStorage.difficulty || 'any',
+			difficulty: localStorage.difficulty || 0,
 			colourScheme: localStorage.colourScheme || defaultColorScheme,
 			darkMode: localStorage.darkMode || 0,
 		};
@@ -17,6 +17,7 @@ class Settings {
 		localStorage.category = category;
 	}
 	set difficulty(difficulty) {
+        if (difficulty < 0 || difficulty > 4) difficulty = 0;
 		this.data.difficulty = difficulty;
 		localStorage.difficulty = difficulty;
 	}
@@ -45,7 +46,7 @@ class Settings {
 	}
 
 	get triviaUrl() {
-		return `https://opentdb.com/api.php?amount=1&category=${this.category === 'Any' ? '0' : this.category}&difficulty=${this.difficulty === 'any' ? '0' : this.difficulty}`;
+		return `https://opentdb.com/api.php?amount=1&category=${this.category === 'Any' ? '0' : this.category}&difficulty=${this.difficulty == 0 ? '0' : difficultiesMap[this.difficulty]}`;
 	}
 
 	reset() {

@@ -1,16 +1,10 @@
-if (window.location.search) {
-	const search = new URLSearchParams(window.location.search);
-	if (search.has('difficulty')) {
-		settings.difficulty = search.get('difficulty');
-	}
-	if (search.has('category')) {
-		settings.category = search.get('category');
-	}
-	if (search.has('colourScheme')) {
-		settings.colourScheme = search.get('colourScheme');
-	}
-	window.history.replaceState(null, null, window.location.pathname);
-}
+const difficultiesMap = ['any', 'easy', 'medium' ,'hard'];
+
+const search = new URLSearchParams(window.location.search);
+settings.difficulty = search.get('d') || settings.difficulty;
+settings.category = search.get('c') || settings.category;
+
+window.history.replaceState(null, null, `${window.location.pathname}?c=${settings.category}&d=${settings.difficulty}`);
 
 const $ = (id) => document.getElementById(id);
 const questions = $('questions');
@@ -18,8 +12,6 @@ const scoreEl = $('scoreNumber');
 const streakEl = $('streakNumber');
 const highScoreEl = $('highScoreNumber');
 const confetti = new Confetti('confetti');
-if (!localStorage.highScore) localStorage.highScore = 0;
-highScoreEl.innerHTML = localStorage.highScore;
 let jokeIds = 0;
 let score = 0;
 let streak = 0;
@@ -123,7 +115,7 @@ async function fetchQuestion() {
 			throw new Error('Error after fetch');
 		}
 		errorThrown = true;
-		settings.difficulty = 'any';
+		settings.difficulty = 0;
 		settings.category = 0;
 		return fetchQuestion();
 	}
@@ -166,10 +158,12 @@ darkModeElement.addEventListener('change', () => {
     (['Any', 'Easy', 'Medium', 'Hard']).forEach((difficulty) => {
         difficulties.innerHTML += `<option ${difficulty.toLocaleLowerCase() === settings.difficulty ? 'selected' : ''} value="${difficulty.toLocaleLowerCase()}">${difficulty}</option>`;
     });
-    form.addEventListener('submit', () => {
-		settings.difficulty = difficulties.options[difficulties.selectedIndex].value;
+    categories.addEventListener('change', () => {
 		settings.category = categories.options[categories.selectedIndex].value;
-
+        ques[ques.length - 1].reRun();
+    });
+    difficulties.addEventListener('change', () => {
+		settings.difficulty = difficulties.options[difficulties.selectedIndex].value;
         ques[ques.length - 1].reRun();
     });
 	colourSchemesElement.addEventListener('change', () => {
