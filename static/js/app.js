@@ -20,6 +20,7 @@ const scoreEl = $('scoreNumber');
 const streakEl = $('streakNumber');
 const highScoreEl = $('highScoreNumber');
 const confetti = new Confetti('confetti');
+localStorage.highScore = highScoreEl.innerHTML = localStorage.highScore || 0;
 let jokeIds = 0;
 let score = 0;
 let streak = 0;
@@ -109,26 +110,35 @@ class JokeCard {
 }
 
 let errorThrown = false;
+let questionQueue = [];
 async function fetchQuestion() {
+    if (questionQueue[0]) {
+        const question = questionQueue[0];
+        questionQueue.shift();
+        return question;
+    }
     let json;
     try {
         json = await (await fetch(settings.triviaUrl)).json();
+        if (json.response_code != 0 || !json.results?.length) {
+            if (errorThrown) {
+                errorThrown = false
+                throw new Error('Error after fetch');
+            }
+            errorThrown = true;
+            settings.difficulty = 0;
+            settings.category = 0;
+            return fetchQuestion();
+        }
+    
+        const question = json.results[0];
+        json.results.shift();
+        questionQueue = json.results;
+        return question;
     } catch(err) {
         console.error(err);
         throw new Error(err);
     };
-    if (json.response_code != 0) {
-		if (errorThrown) {
-			errorThrown = false
-			throw new Error('Error after fetch');
-		}
-		errorThrown = true;
-		settings.difficulty = 0;
-		settings.category = 0;
-		return fetchQuestion();
-	}
-
-    return json.results[0];
 };
 
 function answerButton(text, id, questionID, answerID) {
@@ -141,6 +151,7 @@ function newQuestion(element) {
 }
 
 function refreshQuestion() {
+    questionQueue = [];
 	ques[ques.length - 1].reRun();
 }
 
