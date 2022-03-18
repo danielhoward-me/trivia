@@ -50,7 +50,7 @@ class Settings {
 	}
 
 	get triviaUrl() {
-		return `https://opentdb.com/api.php?amount=1&category=${this.category == 0 ? '0' : this.category}&difficulty=${this.difficulty == 0 ? '0' : difficultiesMap[this.difficulty]}`;
+		return `https://opentdb.com/api.php?amount=30&category=${this.category == 0 ? '0' : this.category}&difficulty=${this.difficulty == 0 ? '0' : difficultiesMap[this.difficulty]}`;
 	}
 
 	updateUrl() {
